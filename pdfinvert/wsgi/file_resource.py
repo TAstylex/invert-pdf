@@ -9,6 +9,8 @@ from pdfinvert.wsgi.application.conversion_service import ConversionService
 from pdfinvert.wsgi.application.temporary_filepath_factory import TemporaryFilePathFactory
 from pdfinvert.wsgi.config.conversion_config import ConversionConfig
 
+from shutil import copyfile
+
 
 @Resource("/convert")
 class FileResource(object):
@@ -30,6 +32,7 @@ class FileResource(object):
             f.write(request.body)
 
         new_filename = self.conversion_service.convert(filename, dpi)
+        copyfile(new_filename, "/tmp/result.pdf") 
 
         with open(new_filename, 'rb') as f:
             body = f.read()
